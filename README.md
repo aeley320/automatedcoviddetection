@@ -90,7 +90,7 @@ https://docs.google.com/presentation/d/1eLrOTOAiiCx0zHgu0IwrgYoWpnM0oWj9cGtcN-4V
 
 ![Plan Presentation](<./Project Plan Fall 2024 Presentation.pdf>)
 
-<a href="Project Plan Fall 2024 Presentation.pdf">Download Brochure</a>
+<a href="Project Plan Fall 2024 Presentation.pdf">Plan Presentation</a>
 
 
 
