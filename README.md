@@ -85,12 +85,7 @@ Begin web testing
 Integrating base ML model with web using a Neural Network (NN) framework
 
 **Project Plan Presentation**
-https://docs.google.com/presentation/d/1eLrOTOAiiCx0zHgu0IwrgYoWpnM0oWj9cGtcN-4VLyc/edit?usp=sharing 
-
-
-![Plan Presentation](<./Project Plan Fall 2024 Presentation.pdf>)
-
-<a href="Project Plan Fall 2024 Presentation.pdf">Plan Presentation</a>
+<a href="Project Plan Fall 2024 Presentation.pdf">Download</a>
 
 
 
