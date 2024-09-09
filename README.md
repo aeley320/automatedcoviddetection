@@ -88,7 +88,7 @@ Integrating base ML model with web using a Neural Network (NN) framework
 https://docs.google.com/presentation/d/1eLrOTOAiiCx0zHgu0IwrgYoWpnM0oWj9cGtcN-4VLyc/edit?usp=sharing 
 
 Plan Presentation 
-![here](./Project Plan Fall 2024 Presentation.pdf)
+![here](<./Project Plan Fall 2024 Presentation.pdf>)
 
 
 
