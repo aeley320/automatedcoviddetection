@@ -85,20 +85,22 @@ Begin web testing
 Integrating base ML model with web using a Neural Network (NN) framework
 -->
 
-<div align="center">
-## First Semester
 
+## First Semester
+<div align="center">
 | Plan (Sep 4)       |<a href="Project Plan Fall 2024 Presentation.pdf">Presentation</a>                 |
 |--------------------|-------------------------------------------------|
 | Milestone 1 (Sep 30)| <a href="Milestone One Fall 2024 Senior Design.pdf">Presentation</a>, [Progress Evaluation](#) |
 | Milestone 2 (Oct 28)| [Presentation](#), [Progress Evaluation](#)    |
 | Milestone 3 (Nov 25)| [Presentation](#), [Progress Evaluation](#)    |
+</div>
 
 ## Second Semester
-
+<div align="center">
 | Plan (Sep 4)        | [Plan](#) , [Presentation](#)                 |
 |---------------------|-------------------------------------------------|
 | Milestone 4 (Sep 30)| [Presentation](#), [Progress Evaluation](#)    |
 | Milestone 5 (Oct 28)| [Poster](#), [e-book page](#), [Presentation](#), [Progress Evaluation](#) |
 | Milestone 6 (Nov 25)| [User and/or Developer Manual](#), [Demo Video](#), [Presentation](#), [Progress Evaluation](#) |
+
 </div>
