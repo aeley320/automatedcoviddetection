@@ -88,7 +88,7 @@ Integrating base ML model with web using a Neural Network (NN) framework
 
 ## First Semester
 
-| Plan (Sep 4)       | [Plan] , <a href="Project Plan Fall 2024 Presentation.pdf">Presentation</a>                 |
+| Plan (Sep 4)       | [Plan](Project Plan Fall 2024 Presentation.pdf) , <a href="Project Plan Fall 2024 Presentation.pdf">Presentation</a>                 |
 |--------------------|-------------------------------------------------|
 | Milestone 1 (Sep 30)| [Presentation](#), [Progress Evaluation](#) |
 | Milestone 2 (Oct 28)| [Presentation](#), [Progress Evaluation](#)    |
