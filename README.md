@@ -86,7 +86,7 @@ Integrating base ML model with web using a Neural Network (NN) framework
 -->
 <div align="center">
 <h2>First Semester</h2>
-  <table>
+  <table style="text-align: center;">
     <tr>
       <td>Plan (Sep 4)</td>
       <td><a href="Project Plan Fall 2024 Presentation.pdf">Presentation</a></td>
