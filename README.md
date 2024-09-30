@@ -58,7 +58,7 @@ Different frameworks/architectures may be better suited for this task which woul
 
 
 
-
+<!---
 **Milestone 1 Tasks (Sep 30):**
 Pick framework (web)
 Pick framework (ML)
@@ -83,7 +83,7 @@ Begin working on web framework back end
 Begin ML testing
 Begin web testing
 Integrating base ML model with web using a Neural Network (NN) framework
-
+-->
 
 
 ## First Semester
