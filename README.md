@@ -87,20 +87,77 @@ Integrating base ML model with web using a Neural Network (NN) framework
 
 
 ## First Semester
-<div align="center">
+
 | Plan (Sep 4)       |<a href="Project Plan Fall 2024 Presentation.pdf">Presentation</a>                 |
 |--------------------|-------------------------------------------------|
 | Milestone 1 (Sep 30)| <a href="Milestone One Fall 2024 Senior Design.pdf">Presentation</a>, [Progress Evaluation](#) |
 | Milestone 2 (Oct 28)| [Presentation](#), [Progress Evaluation](#)    |
 | Milestone 3 (Nov 25)| [Presentation](#), [Progress Evaluation](#)    |
-</div>
+
 
 ## Second Semester
-<div align="center">
+
 | Plan (Sep 4)        | [Plan](#) , [Presentation](#)                 |
 |---------------------|-------------------------------------------------|
 | Milestone 4 (Sep 30)| [Presentation](#), [Progress Evaluation](#)    |
 | Milestone 5 (Oct 28)| [Poster](#), [e-book page](#), [Presentation](#), [Progress Evaluation](#) |
 | Milestone 6 (Nov 25)| [User and/or Developer Manual](#), [Demo Video](#), [Presentation](#), [Progress Evaluation](#) |
 
+
+
+<h2>First Semester</h2>
+  <table>
+    <tr>
+      <td>Plan (Sep 4)</td>
+      <td><a href="#">Plan</a>, <a href="#">Presentation</a></td>
+    </tr>
+    <tr>
+      <td>Milestone 1 (Sep 30)</td>
+      <td>
+        <a href="#">Requirement</a>, 
+        <a href="#">Design</a>, 
+        <a href="#">Test</a>, 
+        <a href="#">Presentation</a>, 
+        <a href="#">Progress Evaluation</a>
+      </td>
+    </tr>
+    <tr>
+      <td>Milestone 2 (Oct 28)</td>
+      <td><a href="#">Presentation</a>, <a href="#">Progress Evaluation</a></td>
+    </tr>
+    <tr>
+      <td>Milestone 3 (Nov 25)</td>
+      <td><a href="#">Presentation</a>, <a href="#">Progress Evaluation</a></td>
+    </tr>
+  </table>
+
+  <h2>Second Semester</h2>
+  <table>
+    <tr>
+      <td>Plan (Sep 4)</td>
+      <td><a href="#">Plan</a>, <a href="#">Presentation</a></td>
+    </tr>
+    <tr>
+      <td>Milestone 4 (Sep 30)</td>
+      <td><a href="#">Presentation</a>, <a href="#">Progress Evaluation</a></td>
+    </tr>
+    <tr>
+      <td>Milestone 5 (Oct 28)</td>
+      <td>
+        <a href="#">Poster</a>, 
+        <a href="#">e-book page</a>, 
+        <a href="#">Presentation</a>, 
+        <a href="#">Progress Evaluation</a>
+      </td>
+    </tr>
+    <tr>
+      <td>Milestone 6 (Nov 25)</td>
+      <td>
+        <a href="#">User and/or Developer Manual</a>, 
+        <a href="#">Demo Video</a>, 
+        <a href="#">Presentation</a>, 
+        <a href="#">Progress Evaluation</a>
+      </td>
+    </tr>
+  </table>
 </div>
