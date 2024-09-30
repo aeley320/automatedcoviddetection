@@ -17,7 +17,7 @@ Lamine Deen - ldeen2016@my.fit.edu
 Zahra Nematzadeh, znematzadeh@fit.edu
 
 **Client:**
-Zahra Nematzadeh, znematzadeh@fit.edus
+Zahra Nematzadeh, znematzadeh@fit.edu
 
 **Date of Meeting:**
 08/27 - 3:30 PM
@@ -100,7 +100,7 @@ Integrating base ML model with web using a Neural Network (NN) framework
         <a href="#">Test</a>, 
 	-->
         <a href="Milestone One Fall 2024 Senior Design.pdf">Presentation</a>, 
-        <a href="#">Progress Evaluation</a>
+        <a href="Milestone One Progress Evaluation.pdf">Progress Evaluation</a>
       </td>
     </tr>
     <tr>
