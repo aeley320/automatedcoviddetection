@@ -12,6 +12,7 @@ Automated COVID-19 Detection Using Machine Learning
 Rodrigo Alarcon - ralarcon2019@my.fit.edu
 Emma Conti - econti2020@my.fit.edu
 Lamine Deen - ldeen2016@my.fit.edu
+Audrey Eley - aeley2020@my.fit.edu
 
 **Faculty Advisor:**
 Zahra Nematzadeh, znematzadeh@fit.edu
