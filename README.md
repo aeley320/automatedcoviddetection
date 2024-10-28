@@ -106,7 +106,7 @@ Integrating base ML model with web using a Neural Network (NN) framework
     </tr>
     <tr>
       <td>Milestone 2 (Oct 28)</td>
-      <td><a href="#">Presentation</a>, <a href="#">Progress Evaluation</a></td>
+      <td><a href="Milestone Two Fall 2024 Senior Design.pdf">Presentation</a>, <a href="#">Progress Evaluation</a></td>
     </tr>
     <tr>
       <td>Milestone 3 (Nov 25)</td>
