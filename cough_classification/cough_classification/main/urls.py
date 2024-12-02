@@ -8,4 +8,5 @@ urlpatterns = [
    
     path('', views.home, name='home'),
     path('project/', views.project, name='project'),
+    path('record_audio/', views.record_audio, name='record_audio'),
 ]

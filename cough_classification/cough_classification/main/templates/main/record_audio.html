@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Audio Classification</h1>
+<p>Record or upload an audio file for classification.</p>
+
+<!-- Audio Recording -->
+<div id="recorder">
+    <button id="recordButton">Start Recording</button>
+    <button id="stopButton" disabled>Stop Recording</button>
+    <audio id="audioPlayback" controls></audio>
+</div>
+
+<!-- Upload Form -->
+<form id="audioForm" method="POST" action = "{% url 'classify_audio' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" id="audioFileInput" name="audio" accept="audio/wav" />
+    <button type="submit">Classify</button>
+</form>
+
+<!-- Result Display -->
+<div id="result">
+    <h2>Classification Result:</h2>
+    <p id="resultText">No result yet.</p>
+</div>
+
+<script>
+    // JavaScript for recording audio
+    let mediaRecorder;
+    let audioChunks = [];
+
+    const recordButton = document.getElementById("recordButton");
+    const stopButton = document.getElementById("stopButton");
+    const audioPlayback = document.getElementById("audioPlayback");
+
+    recordButton.addEventListener("click", async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+            const audioUrl = new File([audioBlob], "recording.wav", { type: "audio/wav" });
+            audioPlayback.src = audioUrl;
+
+            // Append audio blob to form data
+            const formData = new FormData();
+            formData.append("audio", audioBlob, "recording.wav");
+
+            // Send to server
+            fetch("{% url 'classify_audio' %}", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    document.getElementById("resultText").innerText = data.classification;
+                })
+                .catch((error) => console.error("Error:", error));
+        };
+
+        mediaRecorder.start();
+        recordButton.disabled = true;
+        stopButton.disabled = false;
+    });
+
+    stopButton.addEventListener("click", () => {
+        mediaRecorder.stop();
+        recordButton.disabled = false;
+        stopButton.disabled = true;
+    });
+
+    // JavaScript for file upload
+    const audioForm = document.getElementById("audioForm");
+    audioForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(audioForm);
+
+        fetch("{% url 'classify_audio' %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                document.getElementById("resultText").innerText = data.classification;
+            })
+            .catch((error) => console.error("Error:", error));
+    });
+</script>
+{% endblock %}

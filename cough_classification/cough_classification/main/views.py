@@ -8,3 +8,6 @@ def project(request):
 
 def home(request):
     return render(request, 'main/home.html')
+
+def record_audio(request):
+    return render(request, 'main/record_audio.html')
