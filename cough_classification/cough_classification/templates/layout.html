@@ -82,7 +82,7 @@
                 <div class="navbar-nav">
                     <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" aria-current="page" href="{% url 'main:home' %}">Home</a>
                     <a class="nav-link {% if request.resolver_match.url_name == 'project' %}active{% endif %}" aria-current="page" href="{% url 'main:project' %}">Project</a>
-                   
+                    <a class="nav-link {% if request.resolver_match.url_name == 'record_audio' %}active{% endif %}" aria-current="page" href="{% url 'main:record_audio' %}">Cough Classifier</a>
                     
                     {% if user.is_authenticated %}
                         {% comment %} <form action="{% url 'users:logout' %}" method="post">
