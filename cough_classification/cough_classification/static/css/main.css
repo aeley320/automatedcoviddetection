@@ -15,7 +15,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f8f9fa;
+    background-color: #fefdff;
     padding: 10px;
     border-bottom: 1px solid #ddd;
     margin-bottom: 10px;
@@ -24,11 +24,6 @@
 #pdf-toolbar button {
     margin-right: 10px;
 }
-
-
-
-
-
 
 .form-group {
     margin-bottom: 1.5rem;

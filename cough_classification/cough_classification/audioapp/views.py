@@ -12,6 +12,8 @@ from .models import AudioSample
 from mimetypes import guess_type
 import torch.nn.functional as F
 import wave
+from pydub import AudioSegment
+from django.contrib.auth.decorators import login_required
 #from django.shortcuts import get_object_or_404
 #from django.http import HttpResponseForbidden
 
@@ -23,8 +25,13 @@ model = SimpleCNN(num_classes=3)  # Initialize the model
 model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu"), weights_only=True))  # Load weights
 model.eval()  # Set the model to evaluation mode
 
+@csrf_exempt
+@login_required
 def classify_audio(request):
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'User not authenticated.'}, status=401)
+
         audio_file = request.FILES.get('audio')
 
         # Validate file 
@@ -42,18 +49,20 @@ def classify_audio(request):
                 temp_file.write(chunk)
             temp_file_path = temp_file.name
 
-        with wave.open(temp_file_path, 'rb') as audio_file:
-            audio_params = audio_file.getparams()
-            audio_frames = audio_file.readframes(audio_params.nframes)
-        audio = audio.set_frame_rate(22050).set_channels(1)
-        temp_file_path = temp_file_path.replace(".wav", "_normalized.wav")
-        audio.export(temp_file_path, format="wav")
-
-        # Debug: Check if the file exists and is accessible
-        print(f"Temporary file path: {temp_file_path}")
-        print(f"File exists: {os.path.exists(temp_file_path)}")
-
         try:
+            # Check if the file is a valid WAV file
+            try:
+                with wave.open(temp_file_path, 'rb') as audio_file:
+                    audio_params = audio_file.getparams()
+                    audio_frames = audio_file.readframes(audio_params.nframes)
+            except wave.Error as e:
+                # Convert the audio file to a supported format using pydub
+                audio = AudioSegment.from_file(temp_file_path)
+                audio.export(temp_file_path, format="wav")
+                with wave.open(temp_file_path, 'rb') as audio_file:
+                    audio_params = audio_file.getparams()
+                    audio_frames = audio_file.readframes(audio_params.nframes)
+
             # Load the audio file using librosa
             y, sr = load(temp_file_path, sr=22050)
             print(f"Audio loaded successfully with librosa: {y.shape}, {sr}")
@@ -61,7 +70,7 @@ def classify_audio(request):
             # Ensure the tensor is contiguous
             if not y.flags['C_CONTIGUOUS']:
                 y = np.ascontiguousarray(y)
-    
+
             # Convert to mel spectrogram
             mel_spectrogram = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128, fmax=8000)
             mel_spec_db = librosa.power_to_db(mel_spectrogram, ref=np.max)
@@ -80,9 +89,8 @@ def classify_audio(request):
             # Expand to 3 channels by duplicating the tensor
             mel_spec_tensor = mel_spec_tensor.expand(1, 3, mel_spec_tensor.shape[2], mel_spec_tensor.shape[3])
 
-
             print(f"Adjusted mel-spectrogram tensor shape: {mel_spec_tensor.shape}")
-            
+
             # Use the model to classify the mel spectrogram
             with torch.no_grad():
                 outputs = model(mel_spec_tensor)
@@ -93,14 +101,16 @@ def classify_audio(request):
             classification_result = class_names[predicted.item()]
 
             # Save audio sample to the database after successful processing
-            audio_sample = AudioSample.objects.create(user=request.user, audio_file=audio_file)
+            audio_sample = AudioSample.objects.create(user=request.user, audio_file=temp_file_path)
 
             return JsonResponse({'classification': classification_result})
 
+        except wave.Error as e:
+            print(f"Wave file error: {e}")
+            return JsonResponse({'error': 'Invalid WAV file.'}, status=400)
         except Exception as e:
             print(f"Librosa load error: {e}")
             return JsonResponse({'error': str(e)}, status=400)
-
         finally:
             # Clean up the temporary file
             if os.path.exists(temp_file_path):
@@ -109,5 +119,5 @@ def classify_audio(request):
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 from django.shortcuts import render
-def record_audio_page(request):
+def record_audio(request):
     return render(request, 'record_audio.html')

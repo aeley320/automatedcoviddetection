@@ -12,7 +12,7 @@
 </div>
 
 <!-- Upload Form -->
-<form id="audioForm" method="POST" action = "{% url 'classify_audio' %}" enctype="multipart/form-data">
+<form id="audioForm" method="POST" action = "{% url 'main:classify_audio' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" id="audioFileInput" name="audio" accept="audio/wav" />
     <button type="submit">Classify</button>
@@ -40,7 +40,7 @@
         mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
         mediaRecorder.onstop = () => {
             const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-            const audioUrl = new File([audioBlob], "recording.wav", { type: "audio/wav" });
+            const audioUrl = URL.createObjectURL(audioBlob);
             audioPlayback.src = audioUrl;
 
             // Append audio blob to form data
