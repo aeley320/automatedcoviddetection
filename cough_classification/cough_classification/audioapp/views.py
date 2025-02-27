@@ -14,6 +14,10 @@ import torch.nn.functional as F
 import wave
 from pydub import AudioSegment
 from django.contrib.auth.decorators import login_required
+
+import logging
+logger = logging.getLogger(__name__)
+
 #from django.shortcuts import get_object_or_404
 #from django.http import HttpResponseForbidden
 
@@ -24,6 +28,80 @@ model_path = os.path.join(os.path.dirname(__file__), "model.pth")
 model = SimpleCNN(num_classes=3)  # Initialize the model
 model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu"), weights_only=True))  # Load weights
 model.eval()  # Set the model to evaluation mode
+
+"""@login_required
+@csrf_exempt
+def classify_audio(request):
+   
+    if request.method == "POST":
+        logger.info("Received POST request for audio classification.")
+        logger.info("Request FILES: %s", request.FILES)
+        logger.info("Request POST: %s", request.POST)
+
+
+        file_path = "../media/file_example_WAV_2MG.wav"  
+        
+        if not os.path.exists(file_path):
+            return JsonResponse({"error": "File does not exist."}, status=400)
+
+        try:
+            # Check if the file is a valid WAV file
+            try:
+                with wave.open(file_path, 'rb') as audio_file:
+                    audio_params = audio_file.getparams()
+                    audio_frames = audio_file.readframes(audio_params.nframes)
+            except wave.Error:
+                logger.error("Wave file error: %s", e)
+                # Convert the audio file to a supported format using pydub
+                audio = AudioSegment.from_file(file_path)
+                temp_file_path = file_path.replace(".wav", "_converted.wav")
+                audio.export(temp_file_path, format="wav")
+                file_path = temp_file_path  # Use the converted file
+                with wave.open(file_path, 'rb') as audio_file:
+                    audio_params = audio_file.getparams()
+                    audio_frames = audio_file.readframes(audio_params.nframes)
+
+            # Load the audio file using librosa
+            y, sr = librosa.load(file_path, sr=22050)
+
+            # Ensure the tensor is contiguous
+            if not y.flags['C_CONTIGUOUS']:
+                y = np.ascontiguousarray(y)
+
+            # Convert to mel spectrogram
+            mel_spectrogram = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128, fmax=8000)
+            mel_spec_db = librosa.power_to_db(mel_spectrogram, ref=np.max)
+
+            # Normalize spectrogram
+            mel_spec_db = mel_spec_db / np.max(np.abs(mel_spec_db))
+
+            # Convert to tensor
+            mel_spec_tensor = torch.tensor(mel_spec_db)
+
+            # Adjust tensor shape for the model
+            mel_spec_tensor = mel_spec_tensor.unsqueeze(0)  # Add batch dimension
+            mel_spec_tensor = mel_spec_tensor.unsqueeze(0)  # Add channel dimension
+            mel_spec_tensor = mel_spec_tensor.expand(1, 3, mel_spec_tensor.shape[2], mel_spec_tensor.shape[3])
+
+            # Use the model to classify the mel spectrogram
+            with torch.no_grad():
+                outputs = model(mel_spec_tensor)
+                _, predicted = torch.max(outputs, 1)
+
+            # Map the predicted label to a class name
+            class_names = ['COVID-19', 'Healthy', 'Symptomatic']
+            classification_result = class_names[predicted.item()]
+
+            return JsonResponse({"classification": classification_result})
+
+        except Exception as e:
+            logger.error("Error processing the file: %s", e)
+            return JsonResponse({"error": f"Error processing the file: {e}"}, status=400)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+def classification_page(request):
+    return render(request, 'record_audio.html')"""
 
 @csrf_exempt
 @login_required
