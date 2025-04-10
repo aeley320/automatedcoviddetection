@@ -9,28 +9,47 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-import os
-import sys
+
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-sys.path.append(str(BASE_DIR))
 
+#NEW CONTENT
+from pathlib import Path
+import environ
+import os
+import dj_database_url
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-x3!p+09)do=vu#py97vx_cm6!v!u*q6@87*=z2@^zc8to4=#b#"
+# SECRET_KEY = "django-insecure-x3!p+09)do=vu#py97vx_cm6!v!u*q6@87*=z2@^zc8to4=#b#"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'example.com']
+env = environ.Env()
+
+# MEDIA_S3_ACCESS_KEY_ID = env('MEDIA_S3_ACCESS_KEY_ID', default=None)
+# MEDIA_S3_SECRET_ACCESS_KEY = env('MEDIA_S3_SECRET_ACCESS_KEY', default=None)
+# MEDIA_S3_BUCKET_NAME = env('MEDIA_S3_BUCKET_NAME', default=None)
+
+
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+SECRET_KEY = env("SECRET_KEY", default="change_me")
+
+DEBUG = env("DEBUG", default=True)
+
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+
 
 
 # Application definition
-
 INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap4",
@@ -42,7 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "main",
     "users",
-    'audioapp',
+    "MLContainer",
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -50,6 +69,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",   # <-- NEW CONTENT
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -57,6 +77,11 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+#NEW CONTENT
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = DEBUG
+
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
@@ -66,7 +91,7 @@ ROOT_URLCONF = "cough_classification.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        "DIRS": ['templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -85,13 +110,60 @@ WSGI_APPLICATION = "cough_classification.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "djangodb",  # Match the database name
+#         "USER": "mydjango",  # Match the PostgreSQL role (user)
+#         "PASSWORD": "djangoDBpass",  # Use the password you set
+#         "HOST": "localhost",  # Change if using a remote DB
+#         "PORT": "5432",  # Default PostgreSQL port
+#     }
+# }
+
+# DATABASE_URL = "postgresql://mysuperuser:DjangoDBPass23##@applikudjango.cpgg0mgau32j.us-east-1.rds.amazonaws.com:5432/DjangoApplikuDB"
+
+# NEW CONTENT
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
+# DATABASES = {
+#     "default": env.db(default="sqlite://db.sqlite3")
+# }
+"""if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "djangodb",  # Match the database name
+            "USER": "mydjango",  # Match the PostgreSQL role (user)
+            "PASSWORD": "djangoDBpass",  # Use the password you set
+            "HOST": "localhost",  # Change if using a remote DB
+            "PORT": "5432",  # Default PostgreSQL port
+        }
+        # env.db(default="sqlite://db.sqlite3")
+    }
+else:
+    DATABASES = {
+        "default": env.db("DATABASE_URL")
+    }"""
+
+# db_from_env = os.environ.get("DATABASE_URL")
+# DATABASES["default"].update(db_from_env)
+    
+# NEW CONTENT
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "loggers": {"": {"handlers": ["console"], "level": "DEBUG"}},
+}
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -111,6 +183,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "users.Users"  # new
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -127,16 +200,44 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-MEDIA_URL = 'media/'
 
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-MEDIA_ROOT = BASE_DIR / 'media'
+
+# THIS WORKS
+
+if DEBUG:  # Only for local development
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# else:
+#     MEDIA_ROOT = 'media'
+#     MEDIA_URL = f'https://{MEDIA_S3_BUCKET_NAME}.s3.amazonaws.com/'
+#     MEDIA_HOST = f'{MEDIA_S3_BUCKET_NAME}.s3.amazonaws.com'
+#     CUSTOM_MEDIA_DOMAIN = env('d16tatg3lec94w.cloudfront.net', default=None)
+
+#     if CUSTOM_MEDIA_DOMAIN:
+#         MEDIA_HOST = CUSTOM_MEDIA_DOMAIN
+
+#     MEDIA_URL = f'https://{MEDIA_HOST}/'
+
+    
+
+
+#NEW CONTENT
+STATIC_URL = env.str("STATIC_URL", default="/static/")
+STATIC_ROOT = env.str("STATIC_ROOT", default=BASE_DIR / "staticfiles")
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = DEBUG
+
+
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / 'static'
 ]
+
+
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

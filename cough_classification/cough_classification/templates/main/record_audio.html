@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Audio Classification</h1>
+<p>Record or upload an audio file for classification.</p>
+
+<!-- Audio Recording -->
+<div id="recorder">
+    <button id="recordButton">Start Recording</button>
+    <button id="stopButton" disabled>Stop Recording</button>
+    <audio id="audioPlayback" controls></audio>
+</div>
+
+<!-- Upload Form -->
+<form id="audioForm" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" id="audioFileInput" name="audio" accept="audio/wav" />
+    <button type="submit" id="classifyButton">Classify</button>
+</form>
+
+<!-- Result Display -->
+<div id="result">
+    <h2>Classification Result:</h2>
+    <p id="resultText">No result yet.</p>
+</div>
+
+<script>
+    function getCSRFToken() {
+        let cookieValue = null;
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith("csrftoken=")) {
+                cookieValue = cookie.substring("csrftoken=".length, cookie.length);
+                break;
+            }
+        }
+        return cookieValue;
+    }
+    // JavaScript for recording audio
+    let mediaRecorder;
+    let audioChunks = [];
+
+    const recordButton = document.getElementById("recordButton");
+    const stopButton = document.getElementById("stopButton");
+    const audioPlayback = document.getElementById("audioPlayback");
+
+    recordButton.addEventListener("click", async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            audioPlayback.src = audioUrl;
+
+            // Append audio blob to form data
+            const formData = new FormData();
+            formData.append("audio", audioBlob, "recording.wav");
+
+            // Send to server
+            fetch("/detection/", {
+                method: "POST",
+                body: formData,
+                headers: { "X-CSRFToken": getCSRFToken() }
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    document.getElementById("resultText").innerText = data.classification;
+                })
+                .catch((error) => console.error("Error:", error));
+        };
+
+        mediaRecorder.start();
+        recordButton.disabled = true;
+        stopButton.disabled = false;
+    });
+
+    stopButton.addEventListener("click", () => {
+        mediaRecorder.stop();
+        recordButton.disabled = false;
+        stopButton.disabled = true;
+    });
+
+    // JavaScript for file upload
+    const audioForm = document.getElementById("audioForm");
+    document.getElementById("audioForm").addEventListener("submit", function (e) {
+    e.preventDefault();  // Prevent full-page reload
+
+    let formData = new FormData(this);
+
+    fetch("/detection/", {  // Ensure this URL matches Django's URL
+        method: "POST",
+        body: formData,
+        headers: { "X-CSRFToken": getCSRFToken() }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert("Error: " + data.error);
+        } else {
+            document.getElementById("resultText").innerText = "Classification: " + data.classification;
+        }
+    })
+    .catch(error => console.error("Error:", error));
+});
+</script>
+{% endblock %}
